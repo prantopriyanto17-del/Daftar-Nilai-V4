@@ -122,7 +122,9 @@ const DB_SCHEMA: Record<string, string[]> = {
   "Catatan Wali Kelas": ["No", "NISN", "Nama", "Kelas", "NoOrangTua", "Catatan"]
 };
 
-const DATA_FILE = path.join(process.cwd(), "db_data.json");
+const DATA_FILE = process.env.VERCEL
+  ? path.join("/tmp", "db_data.json")
+  : path.join(process.cwd(), "db_data.json");
 
 type DBStore = Record<string, Record<string, any>[]>;
 
@@ -130,6 +132,11 @@ function loadDatabase(): DBStore {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const fileData = fs.readFileSync(DATA_FILE, "utf-8");
+      return JSON.parse(fileData);
+    }
+    const localSeed = path.join(process.cwd(), "db_data.json");
+    if (fs.existsSync(localSeed)) {
+      const fileData = fs.readFileSync(localSeed, "utf-8");
       return JSON.parse(fileData);
     }
   } catch (err) {

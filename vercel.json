@@ -14,7 +14,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/((?!api|exec).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
