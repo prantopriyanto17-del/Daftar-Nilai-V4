@@ -623,9 +623,7 @@ const handleRequest = (req: express.Request, res: express.Response) => {
   res.json(result);
 };
 
-app.all("/exec", handleRequest);
-app.all("/api/exec", handleRequest);
-app.all("/api", handleRequest);
+app.all(["/exec", "/api/exec", "/api", "/api/index"], handleRequest);
 
 // REST API Endpoints for Student Records (/api/students & /api/siswa)
 const studentRouter = express.Router();
@@ -723,15 +721,21 @@ studentRouter.delete("/:nisn?", (req, res) => {
   res.json(result);
 });
 
-app.use("/api/students", studentRouter);
-app.use("/api/siswa", studentRouter);
+app.use(["/api/students", "/api/siswa", "/students", "/siswa"], studentRouter);
 
-// Serve static HTML index at root
-app.get("/", (_req, res) => {
+// Serve static files
+app.use(express.static(process.cwd()));
+
+// Serve static HTML index at root & fallback
+app.get("*", (_req, res) => {
   const indexFile = fs.existsSync(path.join(process.cwd(), "index.html"))
     ? path.join(process.cwd(), "index.html")
     : path.join(process.cwd(), "Index.html");
-  res.sendFile(indexFile);
+  if (fs.existsSync(indexFile)) {
+    res.sendFile(indexFile);
+  } else {
+    res.status(404).send("Page not found");
+  }
 });
 
 export default app;
