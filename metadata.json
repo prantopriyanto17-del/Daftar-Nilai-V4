@@ -1,0 +1,6 @@
+{
+  "name": "Daftar Nilai Antigravity",
+  "description": "Aplikasi Manajemen Daftar Nilai Siswa dan Laporan Perkembangan Hasil Belajar",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

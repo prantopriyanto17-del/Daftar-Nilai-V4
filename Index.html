@@ -1,0 +1,2744 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Nilai Antigravity</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* VARIABLES & RESET */
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #161e31;
+      --bg-tertiary: #1f2a45;
+      --glass-bg: rgba(22, 30, 49, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+
+      --color-primary: #6366f1;
+      /* Neon Indigo */
+      --color-primary-hover: #4f46e5;
+      --color-secondary: #8b5cf6;
+      /* Royal Violet */
+      --color-accent: #10b981;
+      /* Emerald Green */
+      --color-danger: #f43f5e;
+      /* Rose Red */
+      --color-warning: #f59e0b;
+      /* Amber */
+      --color-info: #0ea5e9;
+      /* Sky Blue */
+
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-primary);
+    }
+
+    /* LAYOUT STRUCTURE */
+    #sidebar {
+      width: 280px;
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid var(--glass-border);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      transition: var(--transition-smooth);
+    }
+
+    #main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem 3rem;
+      min-height: 100vh;
+      transition: var(--transition-smooth);
+    }
+
+    /* APP BRANDING */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #ffffff, #d1d5db);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* NAVIGATION LINKS */
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item button {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.85rem 1rem;
+      color: var(--text-secondary);
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: left;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-item button:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active button {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.05));
+      border-left: 3px solid var(--color-primary);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--glass-border);
+      padding-top: 1.5rem;
+    }
+
+    .settings-btn {
+      width: 100%;
+      background: none;
+      border: 1px dashed var(--glass-border);
+      padding: 0.75rem;
+      color: var(--text-secondary);
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .settings-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--text-primary);
+      background-color: rgba(99, 102, 241, 0.05);
+    }
+
+    /* TOP HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .page-title h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .page-title p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    /* GENERAL CONTAINER CARDS */
+    .card {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* DASHBOARD WIDGETS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(22, 30, 49, 0.8), rgba(31, 42, 69, 0.5));
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--color-primary);
+    }
+
+    .stat-card.orange::before {
+      background: var(--color-warning);
+    }
+
+    .stat-card.green::before {
+      background: var(--color-accent);
+    }
+
+    .stat-card.blue::before {
+      background: var(--color-info);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background-color: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+    }
+
+    .stat-card.orange .stat-icon {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+    }
+
+    .stat-card.green .stat-icon {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--color-accent);
+    }
+
+    .stat-card.blue .stat-icon {
+      background-color: rgba(14, 165, 233, 0.1);
+      color: var(--color-info);
+    }
+
+    .stat-info h3 {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-info p {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-top: 0.25rem;
+      background: linear-gradient(to right, #ffffff, #e5e7eb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* CHART CONTAINER & LINT FIXES */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .chart-wrapper {
+      height: 320px;
+      position: relative;
+    }
+
+    .card-db-manager {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .db-manager-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .table-empty-state {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 3rem;
+    }
+
+    .nilai-filter-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .text-muted {
+      color: var(--text-muted);
+    }
+
+    .margin-top-1 {
+      margin-top: 1rem;
+    }
+
+    .settings-modal-container {
+      width: 500px;
+    }
+
+    .nilai-modal-container {
+      width: 800px;
+    }
+
+    .modal-desc-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .loader-text {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .color-gray-200 {
+      color: #e5e7eb;
+    }
+
+    .wa-profile-box {
+      display: none;
+      padding: 1rem;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .wa-profile-table {
+      font-size: 0.85rem;
+      border-collapse: separate;
+      border-spacing: 0 4px;
+      width: 100%;
+    }
+
+    .wa-profile-table td.label {
+      font-weight: 600;
+      padding: 0.25rem 0.5rem 0.25rem 0;
+      width: 100px;
+    }
+
+    .wa-profile-table td.label-auto {
+      font-weight: 600;
+      padding: 0.25rem 0.5rem 0.25rem 0;
+    }
+
+    .wa-profile-table span.bold-val {
+      font-weight: 700;
+    }
+
+    /* Column Sizing classes to replace width attributes */
+    th.th-no {
+      width: 60px;
+    }
+
+    th.th-nisn {
+      width: 120px;
+    }
+
+    th.th-kelas {
+      width: 100px;
+    }
+
+    th.th-phone {
+      width: 160px;
+    }
+
+    th.th-action-siswa {
+      width: 150px;
+      text-align: center;
+    }
+
+    th.th-nilai-no {
+      width: 50px;
+    }
+
+    th.th-nilai-nisn {
+      width: 100px;
+    }
+
+    th.th-nilai-avg {
+      width: 90px;
+    }
+
+    th.th-score {
+      width: 80px;
+    }
+
+    th.th-nilai-action {
+      width: 100px;
+      text-align: center;
+    }
+
+    th.th-catatan-nama {
+      width: 200px;
+    }
+
+    /* INPUT & CONTROLS */
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input-group {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0 1rem;
+      width: 320px;
+      max-width: 100%;
+    }
+
+    .search-input-group input {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      padding: 0.75rem 0.5rem;
+      font-family: var(--font-sans);
+      width: 100%;
+      outline: none;
+    }
+
+    .search-input-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--color-danger), #e11d48);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
+    }
+
+    .btn-danger:hover {
+      box-shadow: 0 6px 16px rgba(244, 63, 94, 0.35);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--color-accent), #059669);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-success:hover {
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+
+    .select-dropdown {
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      outline: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .select-dropdown:focus {
+      border-color: var(--color-primary);
+    }
+
+    /* TABLE SYSTEM */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background-color: rgba(11, 15, 25, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: rgba(22, 30, 49, 0.9);
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      color: var(--text-primary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* TABLE BADGES & CONTROLS */
+    .badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-green {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--color-accent);
+    }
+
+    .badge-yellow {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: var(--color-warning);
+    }
+
+    .badge-red {
+      background-color: rgba(244, 63, 94, 0.15);
+      color: var(--color-danger);
+    }
+
+    .badge-indigo {
+      background-color: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.35rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .action-btn:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .action-btn.edit-btn:hover {
+      color: var(--color-warning);
+    }
+
+    .action-btn.delete-btn:hover {
+      color: var(--color-danger);
+    }
+
+    .action-btn.whatsapp-btn:hover {
+      color: var(--color-accent);
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      width: 720px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: var(--transition-smooth);
+    }
+
+    .modal-overlay.active .modal-container {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .close-modal:hover {
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    /* FORMS & GRID */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-grid.triple {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group.triple-span {
+      grid-column: span 3;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      outline: none;
+      font-size: 0.95rem;
+      transition: var(--transition-smooth);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+    }
+
+    .form-section-title {
+      grid-column: span 2;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+      padding-bottom: 0.35rem;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* WHATSAPP TAB EXCLUSIVE */
+    .wa-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .wa-preview-card {
+      background-color: #075e54;
+      /* Classic WA Green Background */
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wa-preview-header {
+      background-color: #075e54;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .wa-avatar {
+      background-color: #ece5dd;
+      color: #777;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .wa-contact-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .wa-contact-info p {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .wa-preview-body {
+      background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+      background-size: cover;
+      padding: 1.5rem;
+      flex: 1;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .wa-chat-bubble {
+      background-color: #dcf8c6;
+      color: #303030;
+      padding: 0.75rem 1rem;
+      border-radius: 8px 8px 0px 8px;
+      max-width: 85%;
+      align-self: flex-end;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .wa-bubble-time {
+      font-size: 0.65rem;
+      color: rgba(0, 0, 0, 0.45);
+      text-align: right;
+      margin-top: 0.25rem;
+    }
+
+    /* TOAST SYSTEM */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast {
+      background-color: var(--bg-secondary);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      color: var(--text-primary);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateX(120%);
+      transition: var(--transition-smooth);
+      min-width: 300px;
+      max-width: 450px;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast.toast-success {
+      border-left-color: var(--color-accent);
+    }
+
+    .toast.toast-error {
+      border-left-color: var(--color-danger);
+    }
+
+    .toast.toast-warning {
+      border-left-color: var(--color-warning);
+    }
+
+    .toast.toast-info {
+      border-left-color: var(--color-info);
+    }
+
+    /* LOADER OVERLAY */
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(11, 15, 25, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .loader-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.05);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* RESPONSIVE LAYOUT */
+    @media (max-width: 1024px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .wa-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.25rem;
+      }
+
+      .brand {
+        margin-bottom: 1.25rem;
+        justify-content: center;
+      }
+
+      .nav-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+
+      .nav-item button {
+        white-space: nowrap;
+      }
+
+      #main-content {
+        margin-left: 0;
+        padding: 1.5rem 1.25rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid.triple {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width,
+      .form-group.triple-span,
+      .form-section-title {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <div class="brand-text">
+        <h1>Antigravity</h1>
+        <span>Daftar Nilai Siswa</span>
+      </div>
+    </div>
+
+    <nav>
+      <ul class="nav-menu">
+        <li class="nav-item active" onclick="switchTab('dashboard')">
+          <button type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Dashboard
+          </button>
+        </li>
+        <li class="nav-item" onclick="switchTab('siswa')">
+          <button type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Daftar Siswa
+          </button>
+        </li>
+        <li class="nav-item" onclick="switchTab('nilai')">
+          <button type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Daftar Nilai
+          </button>
+        </li>
+        <li class="nav-item" onclick="switchTab('catatan')">
+          <button type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            Catatan Wali Kelas
+          </button>
+        </li>
+        <li class="nav-item" onclick="switchTab('whatsapp')">
+          <button type="button">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Bimbingan &amp; Kirim WA
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="settings-btn" onclick="openModal('settings-modal')">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+        Pengaturan Koneksi
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WINDOW -->
+  <main id="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="page-title" id="page-title-section">
+        <h2>Dashboard Ringkasan</h2>
+        <p>Selamat datang di panel Antigravity. Rangkuman data terkini Anda.</p>
+      </div>
+      <div class="connection-status">
+        <span id="conn-badge" class="badge badge-red">Terputus</span>
+      </div>
+    </header>
+
+    <!-- TAB: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content">
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3>Total Siswa</h3>
+            <p id="stat-total-siswa">0</p>
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-icon">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3>Rata-rata Akademik</h3>
+            <p id="stat-rata-kelas">0.0</p>
+          </div>
+        </div>
+
+        <div class="stat-card orange">
+          <div class="stat-icon">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3>Siswa Dibimbing</h3>
+            <p id="stat-siswa-catatan">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAPH & INITIALIZER -->
+      <div class="dashboard-layout">
+        <div class="card">
+          <div class="card-title">
+            <span>Grafik Nilai Rata-rata Kelas</span>
+            <span class="badge badge-indigo">Multi-Subjek</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="gradeSummaryChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card card-db-manager">
+          <div>
+            <div class="card-title">Database Manager</div>
+            <p class="db-manager-desc">
+              Database Google Sheets Anda memerlukan konfigurasi struktur awal agar semua fitur CRUD berjalan lancar.
+              Tekan tombol inisialisasi untuk membuat semua sheet dan kolom secara otomatis.
+            </p>
+          </div>
+          <button type="button" class="btn btn-success btn-full" onclick="runDbInit()">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M12 2v20"></path>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            Inisialisasi Database
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: DAFTAR SISWA -->
+    <section id="tab-siswa" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="control-row">
+          <div class="search-input-group">
+            <svg class="nav-icon text-muted" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="siswa-search" placeholder="Cari siswa berdasarkan nama/NISN..."
+              oninput="filterSiswaTable()">
+          </div>
+          <button type="button" class="btn" onclick="openSiswaModal()">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12">
+            </svg>
+            Tambah Siswa Baru
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" class="th-no">No</th>
+                <th scope="col" class="th-nisn">NISN</th>
+                <th scope="col">Nama Lengkap</th>
+                <th scope="col" class="th-kelas">Kelas</th>
+                <th scope="col" class="th-phone">No Orang Tua</th>
+                <th scope="col">Keterangan</th>
+                <th scope="col" class="th-action-siswa text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="siswa-table-body">
+              <tr>
+                <td colspan="7" class="table-empty-state">
+                  Mengambil data siswa dari server...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: DAFTAR NILAI -->
+    <section id="tab-nilai" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="control-row">
+          <div class="nilai-filter-group">
+            <select id="subject-selector" class="select-dropdown" onchange="loadSubjectData()">
+              <option value="Daftar Nilai Matematika">Matematika</option>
+              <option value="Daftar Nilai B.Indonesia">Bahasa Indonesia</option>
+              <option value="IPAS">IPAS</option>
+              <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+              <option value="Seni">Seni</option>
+              <option value="B Sunda">Bahasa Sunda</option>
+              <option value="Kokurikuler">Kokurikuler</option>
+            </select>
+            <div class="search-input-group">
+              <svg class="nav-icon text-muted" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="nilai-search" placeholder="Cari berdasarkan nama/NISN..."
+                oninput="filterNilaiTable()">
+            </div>
+          </div>
+          <button type="button" class="btn" onclick="openNilaiModal()">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12">
+            </svg>
+            Input / Edit Nilai
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" class="th-nilai-no">No</th>
+                <th scope="col" class="th-nilai-nisn">NISN</th>
+                <th scope="col">Nama</th>
+                <th scope="col" class="th-nilai-avg">Rata-rata</th>
+                <th scope="col" class="th-score">Harian</th>
+                <th scope="col" class="th-score">TP (Rata)</th>
+                <th scope="col" class="th-score">LM (Rata)</th>
+                <th scope="col" class="th-score">Formatif</th>
+                <th scope="col" class="th-score">Sumatif</th>
+                <th scope="col" class="th-score">Sikap</th>
+                <th scope="col" class="th-score">Hadir</th>
+                <th scope="col">Keterangan</th>
+                <th scope="col" class="th-nilai-action text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="nilai-table-body">
+              <tr>
+                <td colspan="13" class="table-empty-state">
+                  Pilih mata pelajaran atau muat data...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: CATATAN WALI KELAS -->
+    <section id="tab-catatan" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="control-row">
+          <div class="search-input-group">
+            <svg class="nav-icon text-muted" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="catatan-search" placeholder="Cari catatan siswa..." oninput="filterCatatanTable()">
+          </div>
+          <button type="button" class="btn" onclick="openCatatanModal()">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12">
+            </svg>
+            Tulis Catatan Baru
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" class="th-no">No</th>
+                <th scope="col" class="th-nisn">NISN</th>
+                <th scope="col" class="th-catatan-nama">Nama</th>
+                <th scope="col" class="th-kelas">Kelas</th>
+                <th scope="col">Catatan Wali Kelas (Bimbingan)</th>
+                <th scope="col" class="th-nilai-action text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="catatan-table-body">
+              <tr>
+                <td colspan="6" class="table-empty-state">
+                  Mengambil data catatan wali kelas...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: BIMBINGAN & WHATSAPP -->
+    <section id="tab-whatsapp" class="tab-content" style="display: none;">
+      <div class="wa-container">
+
+        <!-- SELEKSI SISWA & FORMULIR SURAT -->
+        <div class="card">
+          <div class="card-title">Kompilasi Laporan Siswa</div>
+          <div class="form-grid col-1">
+
+            <div class="form-group">
+              <label for="wa-student-select">Pilih Siswa</label>
+              <select id="wa-student-select" onchange="onWhatsAppStudentChange()">
+                <option value="">-- Pilih Siswa --</option>
+              </select>
+            </div>
+
+            <div id="wa-student-profile" class="wa-profile-box">
+              <table class="wa-profile-table">
+                <tbody>
+                  <tr>
+                    <td class="label">NISN</td>
+                    <td>: <span id="lbl-wa-nisn">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="label-auto">Nama Wali</td>
+                    <td>: <span id="lbl-wa-nama">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="label-auto">WhatsApp OrangTua</td>
+                    <td>: <span id="lbl-wa-ortu">-</span></td>
+                  </tr>
+                  <tr>
+                    <td class="label-auto">Kehadiran / Sikap</td>
+                    <td>: Rerata Hadir <span id="lbl-wa-hadir" class="bold-val">-</span>% | Rerata Sikap <span
+                        id="lbl-wa-sikap" class="bold-val">-</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group">
+              <label for="wa-custom-notes">Catatan Bimbingan / Pesan Kustom</label>
+              <textarea id="wa-custom-notes" rows="4"
+                placeholder="Tambahkan pesan kustom wali kelas di sini (pesan ini akan ditambahkan ke bagian bawah draf surat)..."
+                oninput="regenerateWhatsAppMessage()"></textarea>
+            </div>
+
+            <button type="button" class="btn btn-success btn-full margin-top-1" id="btn-send-wa"
+              onclick="sendWhatsAppMessage()" disabled>
+              <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M22 2L11 13"></path>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              Hubungi Orang Tua Siswa via WhatsApp
+            </button>
+
+          </div>
+        </div>
+
+        <!-- PREVIEW PESAN DRAF WHATSAPP -->
+        <div class="wa-preview-card">
+          <div class="wa-preview-header">
+            <div class="wa-avatar">✍</div>
+            <div class="wa-contact-info">
+              <h4 id="lbl-wa-chat-title">Orang Tua Siswa</h4>
+              <p>Online</p>
+            </div>
+          </div>
+
+          <div class="wa-preview-body">
+            <div class="wa-chat-bubble">
+              <div id="wa-message-preview">Pilih siswa terlebih dahulu untuk melihat preview draf surat laporan
+                perkembangan siswa...</div>
+              <div class="wa-bubble-time" id="wa-bubble-time-lbl">12:00</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: SETTINGS (Koneksi Web App URL) -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-container settings-modal-container">
+      <div class="modal-header">
+        <h3>Pengaturan Web App URL</h3>
+        <button type="button" class="close-modal" onclick="closeModal('settings-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid col-1">
+          <p class="modal-desc-text">
+            Tempelkan URL Web App dari Google Apps Script yang sudah Anda deploy. Klik "Save" untuk menyimpannya di
+            browser Anda.
+          </p>
+          <div class="form-group">
+            <label for="input-web-app-url">Web App URL</label>
+            <input type="text" id="input-web-app-url"
+              placeholder="https://script.google.com/macros/s/AKfycbysAz1YM6eZ_K9RBuLh7miMsS_20pZjLxJSci556oZ6pWf9T40RBDV1xENWWT8iB_IgGA/exec">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('settings-modal')">Kembali</button>
+        <button type="button" class="btn" onclick="saveSettings()">Simpan Konfigurasi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DAFTAR SISWA (CREATE/EDIT) -->
+  <div class="modal-overlay" id="siswa-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="siswa-modal-title">Tambah Siswa Baru</h3>
+        <button type="button" class="close-modal" onclick="closeModal('siswa-modal')">&times;</button>
+      </div>
+      <form id="siswa-form" onsubmit="submitSiswaForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="siswa-form-mode" value="create">
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="siswa-nisn">NISN *</label>
+              <input type="text" id="siswa-nisn" required placeholder="Masukkan NISN unik">
+            </div>
+
+            <div class="form-group">
+              <label for="siswa-nama">Nama Lengkap *</label>
+              <input type="text" id="siswa-nama" required placeholder="Masukkan nama lengkap siswa">
+            </div>
+
+            <div class="form-group">
+              <label for="siswa-kelas">Kelas *</label>
+              <input type="text" id="siswa-kelas" required placeholder="Contoh: VI-A">
+            </div>
+
+            <div class="form-group">
+              <label for="siswa-ortu">No Orang Tua (WhatsApp) *</label>
+              <input type="text" id="siswa-ortu" required placeholder="Contoh: 08123456789">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="siswa-ket">Keterangan</label>
+              <input type="text" id="siswa-ket" placeholder="Keterangan tambahan (opsional)">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('siswa-modal')">Batal</button>
+          <button type="submit" class="btn" id="siswa-submit-btn">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DAFTAR NILAI (CREATE/EDIT) -->
+  <div class="modal-overlay" id="nilai-modal">
+    <div class="modal-container nilai-modal-container">
+      <div class="modal-header">
+        <h3 id="nilai-modal-title">Input &amp; Edit Nilai Pelajaran</h3>
+        <button type="button" class="close-modal" onclick="closeModal('nilai-modal')">&times;</button>
+      </div>
+      <form id="nilai-form" onsubmit="submitNilaiForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="nilai-form-mode" value="create">
+
+          <div class="form-grid triple">
+            <!-- IDENTITAS -->
+            <div class="form-section-title triple-span">Identitas &amp; Nilai Kognitif Utama</div>
+
+            <div class="form-group">
+              <label for="nilai-student-select">Pilih Siswa *</label>
+              <select id="nilai-student-select" required onchange="onNilaiStudentSelectChange()">
+                <option value="">-- Pilih Siswa --</option>
+              </select>
+              <input type="hidden" id="nilai-nisn">
+              <input type="hidden" id="nilai-nama">
+            </div>
+
+            <div class="form-group">
+              <label for="nilai-harian">Nilai Harian / Tugas *</label>
+              <input type="number" id="nilai-harian" required min="0" max="100" placeholder="0 - 100">
+            </div>
+
+            <div class="form-group">
+              <label for="nilai-formatif">Nilai Formatif *</label>
+              <input type="number" id="nilai-formatif" required min="0" max="100" placeholder="0 - 100">
+            </div>
+
+            <!-- NILAI TP -->
+            <div class="form-section-title triple-span">Nilai TP (Tujuan Pembelajaran)</div>
+            <div class="form-group">
+              <label for="nilai-tp1">TP 1</label>
+              <input type="number" id="nilai-tp1" min="0" max="100" placeholder="TP 1">
+            </div>
+            <div class="form-group">
+              <label for="nilai-tp2">TP 2</label>
+              <input type="number" id="nilai-tp2" min="0" max="100" placeholder="TP 2">
+            </div>
+            <div class="form-group">
+              <label for="nilai-tp3">TP 3</label>
+              <input type="number" id="nilai-tp3" min="0" max="100" placeholder="TP 3">
+            </div>
+            <div class="form-group">
+              <label for="nilai-tp4">TP 4</label>
+              <input type="number" id="nilai-tp4" min="0" max="100" placeholder="TP 4">
+            </div>
+            <div class="form-group">
+              <label for="nilai-tp5">TP 5</label>
+              <input type="number" id="nilai-tp5" min="0" max="100" placeholder="TP 5">
+            </div>
+            <div class="form-group">
+              <!-- placeholder grid filler -->
+            </div>
+
+            <!-- NILAI LM -->
+            <div class="form-section-title triple-span">Nilai LM (Lingkup Materi)</div>
+            <div class="form-group">
+              <label for="nilai-lm1">LM 1</label>
+              <input type="number" id="nilai-lm1" min="0" max="100" placeholder="LM 1">
+            </div>
+            <div class="form-group">
+              <label for="nilai-lm2">LM 2</label>
+              <input type="number" id="nilai-lm2" min="0" max="100" placeholder="LM 2">
+            </div>
+            <div class="form-group">
+              <label for="nilai-lm3">LM 3</label>
+              <input type="number" id="nilai-lm3" min="0" max="100" placeholder="LM 3">
+            </div>
+            <div class="form-group">
+              <label for="nilai-lm4">LM 4</label>
+              <input type="number" id="nilai-lm4" min="0" max="100" placeholder="LM 4">
+            </div>
+            <div class="form-group">
+              <label for="nilai-lm5">LM 5</label>
+              <input type="number" id="nilai-lm5" min="0" max="100" placeholder="LM 5">
+            </div>
+            <div class="form-group">
+              <!-- placeholder grid filler -->
+            </div>
+
+            <!-- ASPEK NON-KOGNITIF -->
+            <div class="form-section-title triple-span">Evaluasi Akhir &amp; Non-Kognitif</div>
+
+            <div class="form-group">
+              <label for="nilai-sumatif">Nilai Sumatif *</label>
+              <input type="number" id="nilai-sumatif" required min="0" max="100" placeholder="0 - 100">
+            </div>
+
+            <div class="form-group">
+              <label for="nilai-sikap">Nilai Sikap *</label>
+              <input type="number" id="nilai-sikap" required min="0" max="100" placeholder="Skala 0-100">
+            </div>
+
+            <div class="form-group">
+              <label for="nilai-kehadiran">Nilai Kehadiran (%) *</label>
+              <input type="number" id="nilai-kehadiran" required min="0" max="100" placeholder="0 - 100">
+            </div>
+
+            <div class="form-group triple-span">
+              <label for="nilai-keterangan">Keterangan Catatan Belajar</label>
+              <textarea id="nilai-keterangan" rows="2"
+                placeholder="Catatan khusus pencapaian siswa untuk subjek ini..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('nilai-modal')">Batal</button>
+          <button type="submit" class="btn" id="nilai-submit-btn">Simpan Nilai</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CATATAN WALI KELAS (CREATE/EDIT) -->
+  <div class="modal-overlay" id="catatan-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="catatan-modal-title">Tulis Catatan Wali Kelas</h3>
+        <button type="button" class="close-modal" onclick="closeModal('catatan-modal')">&times;</button>
+      </div>
+      <form id="catatan-form" onsubmit="submitCatatanForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="catatan-form-mode" value="create">
+
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="catatan-student-select">Pilih Siswa *</label>
+              <select id="catatan-student-select" required onchange="onCatatanStudentSelectChange()">
+                <option value="">-- Pilih Siswa --</option>
+              </select>
+              <input type="hidden" id="catatan-nisn">
+              <input type="hidden" id="catatan-nama">
+              <input type="hidden" id="catatan-kelas">
+              <input type="hidden" id="catatan-ortu">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="catatan-text">Catatan Bimbingan / Perkembangan Siswa *</label>
+              <textarea id="catatan-text" required rows="6"
+                placeholder="Masukkan laporan perkembangan siswa, saran bimbingan, atau pencapaian spesifik siswa..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('catatan-modal')">Batal</button>
+          <button type="submit" class="btn" id="catatan-submit-btn">Simpan Catatan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toast-box"></div>
+
+  <!-- LOADER OVERLAY -->
+  <div class="loader-overlay" id="global-loader">
+    <div class="spinner"></div>
+    <p class="loader-text">Memproses permintaan Anda...</p>
+  </div>
+
+  <!-- JAVASCRIPT CONTROLLER -->
+  <script>
+    // LOCAL STATE
+    let activeTab = 'dashboard';
+    let siswaList = [];
+    let nilaiList = [];
+    let catatanList = [];
+    let chartInstance = null;
+    let selectedStudentSummary = null;
+
+    // ON PAGE LOAD
+    document.addEventListener("DOMContentLoaded", function () {
+      // Set default time in WA bubble
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      document.getElementById("wa-bubble-time-lbl").innerText = timeStr;
+
+      // Load saved Web App URL
+      const savedUrl = localStorage.getItem("antigravity_web_app_url");
+      if (savedUrl) {
+        document.getElementById("input-web-app-url").value = savedUrl;
+      }
+
+      checkConnection();
+      initChart();
+      loadDashboardStats();
+    });
+
+    // CHECKS IF SKRIP RUNS INSIDE GAS OR LOCALLY
+    function isGasEnvironment() {
+      return !!(window.google?.script?.run);
+    }
+
+    function getWebAppUrl() {
+      return localStorage.getItem("antigravity_web_app_url") || (window.location.origin + "/exec");
+    }
+
+    function checkConnection() {
+      const badge = document.getElementById("conn-badge");
+      if (isGasEnvironment()) {
+        badge.innerText = "Terhubung (GAS)";
+        badge.className = "badge badge-green";
+      } else {
+        const customUrl = localStorage.getItem("antigravity_web_app_url");
+        if (customUrl) {
+          badge.innerText = "Terhubung (GAS API)";
+          badge.className = "badge badge-green";
+        } else {
+          badge.innerText = "Terhubung (Node.js)";
+          badge.className = "badge badge-green";
+        }
+      }
+    }
+
+    // DYNAMIC REQUEST CALLER (Unified Fetch & Script Run)
+    async function apiRequest(action, payload = {}) {
+      showLoader(true);
+
+      if (isGasEnvironment()) {
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler((res) => {
+              showLoader(false);
+              resolve(res);
+            })
+            .withFailureHandler((err) => {
+              showLoader(false);
+              reject(err);
+            })
+            .executeAction(Object.assign({ action }, payload));
+        });
+      } else {
+        const url = getWebAppUrl();
+        if (!url) {
+          showLoader(false);
+          openModal("settings-modal");
+          throw new Error("Web App URL kosong. Harap dikonfigurasi.");
+        }
+
+        try {
+          const fetchUrl = `${url}?action=${action}`;
+          const response = await fetch(fetchUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+          }
+
+          const result = await response.json();
+          showLoader(false);
+          return result;
+        } catch (err) {
+          showLoader(false);
+          showToast(`Request Gagal: ${err.message}`, "error");
+          throw err;
+        }
+      }
+    }
+
+    // TAB SYSTEM
+    function switchTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      // Deactivate all sidebar items
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      // Show active tab
+      document.getElementById(`tab-${tabId}`).style.display = 'block';
+
+      // Activate clicked item
+      const clickedItem = Array.from(document.querySelectorAll('.nav-item')).find(item =>
+        item.getAttribute('onclick').includes(tabId)
+      );
+      if (clickedItem) clickedItem.classList.add('active');
+
+      // Update page titles
+      const titles = {
+        dashboard: ["Dashboard Ringkasan", "Selamat datang di panel Antigravity. Rangkuman data terkini Anda."],
+        siswa: ["Daftar Siswa", "Kelola basis data identitas siswa dan detail kontak orang tua."],
+        nilai: ["Daftar Nilai Pelajaran", "Kelola perolehan kognitif dan evaluasi harian/sumatif siswa."],
+        catatan: ["Catatan Wali Kelas", "Dokumentasikan bimbingan dan perkembangan mental/sikap siswa."],
+        whatsapp: ["Bimbingan & Kirim WA", "Kirimkan rangkuman nilai terpadu langsung ke kontak WhatsApp orang tua."]
+      };
+
+      document.getElementById("page-title-section").innerHTML = `
+        <h2>${titles[tabId][0]}</h2>
+        <p>${titles[tabId][1]}</p>
+      `;
+
+      activeTab = tabId;
+
+      // Trigger lazy load
+      if (tabId === 'dashboard') loadDashboardStats();
+      else if (tabId === 'siswa') loadSiswaData();
+      else if (tabId === 'nilai') loadSubjectData();
+      else if (tabId === 'catatan') loadCatatanData();
+      else if (tabId === 'whatsapp') loadWhatsAppSetup();
+    }
+
+    // MODAL STATE MANAGERS
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+
+    // Standard handler
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    // SETTINGS SAVER
+    function saveSettings() {
+      const url = document.getElementById("input-web-app-url").value.trim();
+      if (url) {
+        localStorage.setItem("antigravity_web_app_url", url);
+        closeModal("settings-modal");
+        checkConnection();
+        showToast("Pengaturan Web App URL berhasil disimpan!", "success");
+        loadDashboardStats();
+      } else {
+        localStorage.removeItem("antigravity_web_app_url");
+        closeModal("settings-modal");
+        checkConnection();
+        showToast("Web App URL dihapus.", "info");
+      }
+    }
+
+    // DASHBOARD CHART INITIALIZER
+    function initChart() {
+      try {
+        if (typeof Chart === 'undefined') {
+          console.warn("Chart.js tidak termuat. Grafik tidak akan ditampilkan.");
+          return;
+        }
+        const ctx = document.getElementById('gradeSummaryChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Matematika', 'B.Indonesia', 'IPAS', 'Pancasila', 'Seni', 'B.Sunda', 'Kokurikuler'],
+            datasets: [{
+              label: 'Rata-rata Rapor',
+              data: [0, 0, 0, 0, 0, 0, 0],
+              backgroundColor: 'rgba(99, 102, 241, 0.4)',
+              borderColor: 'rgba(99, 102, 241, 1)',
+              borderWidth: 2,
+              borderRadius: 8,
+              hoverBackgroundColor: 'rgba(139, 92, 246, 0.6)',
+              hoverBorderColor: 'rgba(139, 92, 246, 1)'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans' } }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans' } }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Gagal menginisialisasi Chart.js:", err);
+      }
+    }
+
+    // LOAD DASHBOARD STATS
+    async function loadDashboardStats() {
+      try {
+        const res = await apiRequest('getDashboardStats');
+        if (res?.success) {
+          const stats = res.data;
+          document.getElementById("stat-total-siswa").innerText = stats.totalSiswa || 0;
+          document.getElementById("stat-rata-kelas").innerText = stats.rataRataKelas || "0.0";
+          document.getElementById("stat-siswa-catatan").innerText = stats.totalBimbingan || 0;
+
+          // Update Chart Data
+          if (chartInstance) {
+            const scores = stats.grafikRataRata || {};
+            const chartData = [
+              parseFloat(scores["Matematika"]) || 0,
+              parseFloat(scores["B.Indonesia"]) || 0,
+              parseFloat(scores["IPAS"]) || 0,
+              parseFloat(scores["Pendidikan Pancasila"]) || 0,
+              parseFloat(scores["Seni"]) || 0,
+              parseFloat(scores["B Sunda"]) || 0,
+              parseFloat(scores["Kokurikuler"]) || 0
+            ];
+
+            chartInstance.data.datasets[0].data = chartData;
+            chartInstance.update();
+          }
+        }
+      } catch (err) {
+        console.error("Gagal memuat statistik dashboard", err);
+      }
+    }
+
+    // RUN DB INITIALIZATION
+    async function runDbInit() {
+      if (confirm("Apakah Anda yakin ingin menginisialisasi database? Ini akan membuat sheet-sheet baru jika belum ada tanpa menghapus data yang sudah ada.")) {
+        try {
+          const res = await apiRequest('initDb');
+          if (res?.success) {
+            showToast("Database berhasil diinisialisasi!", "success");
+            loadDashboardStats();
+          } else {
+            showToast(`Inisialisasi Gagal: ${res.error}`, "error");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // ==========================================
+    // 1. SISWA CRUD LOGIC
+    // ==========================================
+    async function loadSiswaData() {
+      try {
+        const res = await apiRequest('read', { sheetName: 'Daftar Siswa' });
+        if (res?.success) {
+          siswaList = res.data;
+          renderSiswaTable(siswaList);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderSiswaTable(data) {
+      const tbody = document.getElementById("siswa-table-body");
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="table-empty-state text-muted">
+              Tidak ada data siswa ditemukan. Silakan tambahkan siswa baru.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = data.map((item, idx) => `
+        <tr>
+          <td>${item.No || (idx + 1)}</td>
+          <td><span class="badge badge-indigo">${item.NISN}</span></td>
+          <td class="font-semibold">${item.Nama}</td>
+          <td>${item.Kelas}</td>
+          <td>${item.NoOrangTua}</td>
+          <td>${item.Keterangan || '-'}</td>
+          <td>
+            <div class="action-icons text-center" style="justify-content: center;">
+              <button type="button" class="action-btn edit-btn" onclick='editSiswa(${JSON.stringify(item).replace(/'/g, "&apos;")})' title="Edit Siswa">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              <button type="button" class="action-btn delete-btn" onclick="deleteSiswa('${item.NISN}')" title="Hapus Siswa">
+                <svg class="nav-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSiswaTable() {
+      const q = document.getElementById("siswa-search").value.toLowerCase();
+      const filtered = siswaList.filter(s =>
+        s.Nama.toLowerCase().includes(q) ||
+        String(s.NISN).includes(q) ||
+        String(s.Kelas).toLowerCase().includes(q)
+      );
+      renderSiswaTable(filtered);
+    }
+
+    function openSiswaModal(siswa = null) {
+      const modeInput = document.getElementById("siswa-form-mode");
+      const title = document.getElementById("siswa-modal-title");
+      const nisnInput = document.getElementById("siswa-nisn");
+      const namaInput = document.getElementById("siswa-nama");
+      const kelasInput = document.getElementById("siswa-kelas");
+      const ortuInput = document.getElementById("siswa-ortu");
+      const ketInput = document.getElementById("siswa-ket");
+
+      document.getElementById("siswa-form").reset();
+
+      if (siswa) {
+        modeInput.value = "update";
+        title.innerText = "Edit Data Siswa";
+        nisnInput.value = siswa.NISN;
+        nisnInput.setAttribute("readonly", "true");
+        namaInput.value = siswa.Nama;
+        kelasInput.value = siswa.Kelas;
+        ortuInput.value = siswa.NoOrangTua;
+        ketInput.value = siswa.Keterangan || "";
+      } else {
+        modeInput.value = "create";
+        title.innerText = "Tambah Siswa Baru";
+        nisnInput.removeAttribute("readonly");
+      }
+
+      openModal("siswa-modal");
+    }
+
+    async function submitSiswaForm(e) {
+      e.preventDefault();
+      const mode = document.getElementById("siswa-form-mode").value;
+      const data = {
+        NISN: document.getElementById("siswa-nisn").value.trim(),
+        Nama: document.getElementById("siswa-nama").value.trim(),
+        Kelas: document.getElementById("siswa-kelas").value.trim(),
+        NoOrangTua: document.getElementById("siswa-ortu").value.trim(),
+        Keterangan: document.getElementById("siswa-ket").value.trim()
+      };
+
+      try {
+        const res = await apiRequest(mode, { sheetName: 'Daftar Siswa', data });
+        if (res?.success) {
+          closeModal("siswa-modal");
+          showToast(`Siswa berhasil ${mode === 'create' ? 'ditambahkan' : 'diperbarui'}!`, "success");
+          loadSiswaData();
+        } else {
+          showToast(res.error || "Gagal menyimpan data.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function editSiswa(siswa) {
+      openSiswaModal(siswa);
+    }
+
+    async function deleteSiswa(nisn) {
+      if (confirm(`Apakah Anda yakin ingin menghapus siswa dengan NISN ${nisn}? Tindakan ini tidak dapat dibatalkan.`)) {
+        try {
+          const res = await apiRequest('delete', { sheetName: 'Daftar Siswa', nisn });
+          if (res?.success) {
+            showToast("Siswa berhasil dihapus!", "success");
+            loadSiswaData();
+          } else {
+            showToast(res.error, "error");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // ==========================================
+    // 2. DAFTAR NILAI CRUD LOGIC
+    // ==========================================
+    async function loadSubjectData() {
+      const subject = document.getElementById("subject-selector").value;
+      try {
+        const res = await apiRequest('read', { sheetName: subject });
+        if (res?.success) {
+          nilaiList = res.data;
+          renderNilaiTable(nilaiList);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function calculateAvg(row) {
+      // Nilai Harian
+      const harian = parseFloat(row["Nilai Harian/Tugas"]) || 0;
+
+      // TP Average
+      let tpCount = 0, tpSum = 0;
+      ["Nilai TP1", "TP2", "TP3", "TP4", "TP5"].forEach(col => {
+        const val = parseFloat(row[col]) || 0;
+        if (val > 0) { tpSum += val; tpCount++; }
+      });
+      const tpAvg = tpCount > 0 ? (tpSum / tpCount) : 0;
+
+      // LM Average
+      let lmCount = 0, lmSum = 0;
+      ["Nilai LM1", "LM2", "LM3", "LM4", "LM5"].forEach(col => {
+        const val = parseFloat(row[col]) || 0;
+        if (val > 0) { lmSum += val; lmCount++; }
+      });
+      const lmAvg = lmCount > 0 ? (lmSum / lmCount) : 0;
+
+      const formatif = parseFloat(row["Nilai Formatif"]) || 0;
+      const sumatif = parseFloat(row["Nilai Sumatif"]) || 0;
+
+      let terms = [];
+      if (harian > 0) terms.push(harian);
+      if (tpAvg > 0) terms.push(tpAvg);
+      if (lmAvg > 0) terms.push(lmAvg);
+      if (formatif > 0) terms.push(formatif);
+      if (sumatif > 0) terms.push(sumatif);
+
+      if (terms.length === 0) return 0;
+      const total = terms.reduce((a, b) => a + b, 0);
+      return (total / terms.length).toFixed(1);
+    }
+
+    function renderNilaiTable(data) {
+      const tbody = document.getElementById("nilai-table-body");
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="13" class="table-empty-state text-muted">
+              Tidak ada data nilai untuk subjek ini. Silakan input nilai baru.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = data.map((item, idx) => {
+        const avg = calculateAvg(item);
+        let avgClass = "badge-red";
+        if (avg >= 80) avgClass = "badge-green";
+        else if (avg >= 70) avgClass = "badge-yellow";
+
+        // Calculate dynamic sub-averages
+        let tpCount = 0, tpSum = 0;
+        ["Nilai TP1", "TP2", "TP3", "TP4", "TP5"].forEach(c => { const val = parseFloat(item[c]) || 0; if (val > 0) { tpSum += val; tpCount++; } });
+        const tpAvg = tpCount > 0 ? (tpSum / tpCount).toFixed(1) : "0";
+
+        let lmCount = 0, lmSum = 0;
+        ["Nilai LM1", "LM2", "LM3", "LM4", "LM5"].forEach(c => { const val = parseFloat(item[c]) || 0; if (val > 0) { lmSum += val; lmCount++; } });
+        const lmAvg = lmCount > 0 ? (lmSum / lmCount).toFixed(1) : "0";
+
+        return `
+          <tr>
+            <td>${item.No || (idx + 1)}</td>
+            <td><span class="badge badge-indigo">${item.NISN}</span></td>
+            <td class="font-semibold">${item.Nama}</td>
+            <td><span class="badge ${avgClass}">${avg}</span></td>
+            <td>${item["Nilai Harian/Tugas"] || 0}</td>
+            <td>${tpAvg}</td>
+            <td>${lmAvg}</td>
+            <td>${item["Nilai Formatif"] || 0}</td>
+            <td>${item["Nilai Sumatif"] || 0}</td>
+            <td>${item["Nilai Sikap"] || 0}</td>
+            <td>${item["Nilai Kehadiran"] || 0}%</td>
+            <td>${item.Keterangan || '-'}</td>
+            <td>
+              <div class="action-icons text-center" style="justify-content: center;">
+                <button type="button" class="action-btn edit-btn" onclick='editNilai(${JSON.stringify(item).replace(/'/g, "&apos;")})' title="Edit Nilai">
+                  <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button type="button" class="action-btn delete-btn" onclick="deleteNilai('${item.NISN}')" title="Hapus Nilai">
+                  <svg class="nav-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterNilaiTable() {
+      const q = document.getElementById("nilai-search").value.toLowerCase();
+      const filtered = nilaiList.filter(n =>
+        n.Nama.toLowerCase().includes(q) ||
+        String(n.NISN).includes(q)
+      );
+      renderNilaiTable(filtered);
+    }
+
+    // Prep variables and fields inside the Grade Input Form
+    async function openNilaiModal(nilai = null) {
+      document.getElementById("nilai-form").reset();
+
+      const selectStudent = document.getElementById("nilai-student-select");
+      selectStudent.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+      selectStudent.removeAttribute("disabled");
+
+      // Load Siswa dropdown
+      try {
+        if (siswaList.length === 0) {
+          const res = await apiRequest('read', { sheetName: 'Daftar Siswa' });
+          if (res?.success) siswaList = res.data;
+        }
+
+        siswaList.forEach(s => {
+          selectStudent.innerHTML += `<option value="${s.NISN}">${s.Nama} (${s.Kelas})</option>`;
+        });
+      } catch (err) {
+        console.error("Gagal memuat dropdown siswa", err);
+      }
+
+      const mode = document.getElementById("nilai-form-mode");
+      const title = document.getElementById("nilai-modal-title");
+
+      if (nilai) {
+        mode.value = "update";
+        title.innerText = `Edit Nilai ${nilai.Nama} (${document.getElementById("subject-selector").value.replace("Daftar Nilai ", "")})`;
+
+        selectStudent.value = nilai.NISN;
+        selectStudent.setAttribute("disabled", "true");
+
+        document.getElementById("nilai-nisn").value = nilai.NISN;
+        document.getElementById("nilai-nama").value = nilai.Nama;
+        document.getElementById("nilai-harian").value = nilai["Nilai Harian/Tugas"] || 0;
+        document.getElementById("nilai-formatif").value = nilai["Nilai Formatif"] || 0;
+        document.getElementById("nilai-sumatif").value = nilai["Nilai Sumatif"] || 0;
+        document.getElementById("nilai-sikap").value = nilai["Nilai Sikap"] || 0;
+        document.getElementById("nilai-kehadiran").value = nilai["Nilai Kehadiran"] || 0;
+        document.getElementById("nilai-keterangan").value = nilai.Keterangan || "";
+
+        // TP
+        document.getElementById("nilai-tp1").value = nilai["Nilai TP1"] || "";
+        document.getElementById("nilai-tp2").value = nilai["TP2"] || "";
+        document.getElementById("nilai-tp3").value = nilai["TP3"] || "";
+        document.getElementById("nilai-tp4").value = nilai["TP4"] || "";
+        document.getElementById("nilai-tp5").value = nilai["TP5"] || "";
+
+        // LM
+        document.getElementById("nilai-lm1").value = nilai["Nilai LM1"] || "";
+        document.getElementById("nilai-lm2").value = nilai["LM2"] || "";
+        document.getElementById("nilai-lm3").value = nilai["LM3"] || "";
+        document.getElementById("nilai-lm4").value = nilai["LM4"] || "";
+        document.getElementById("nilai-lm5").value = nilai["LM5"] || "";
+      } else {
+        mode.value = "create";
+        title.innerText = `Input Nilai Baru (${document.getElementById("subject-selector").value.replace("Daftar Nilai ", "")})`;
+      }
+
+      openModal("nilai-modal");
+    }
+
+    function onNilaiStudentSelectChange() {
+      const select = document.getElementById("nilai-student-select");
+      const selectedNisn = select.value;
+      const selectedOption = select.options[select.selectedIndex];
+
+      if (selectedNisn) {
+        // extract name without class
+        const text = selectedOption.text;
+        const namePart = text.substring(0, text.lastIndexOf(" ("));
+        document.getElementById("nilai-nisn").value = selectedNisn;
+        document.getElementById("nilai-nama").value = namePart;
+      } else {
+        document.getElementById("nilai-nisn").value = "";
+        document.getElementById("nilai-nama").value = "";
+      }
+    }
+
+    async function submitNilaiForm(e) {
+      e.preventDefault();
+      const mode = document.getElementById("nilai-form-mode").value;
+      const subject = document.getElementById("subject-selector").value;
+
+      const data = {
+        NISN: document.getElementById("nilai-nisn").value,
+        Nama: document.getElementById("nilai-nama").value,
+        "Nilai Harian/Tugas": parseFloat(document.getElementById("nilai-harian").value) || 0,
+        "Nilai Formatif": parseFloat(document.getElementById("nilai-formatif").value) || 0,
+        "Nilai Sumatif": parseFloat(document.getElementById("nilai-sumatif").value) || 0,
+        "Nilai Sikap": parseFloat(document.getElementById("nilai-sikap").value) || 0,
+        "Nilai Kehadiran": parseFloat(document.getElementById("nilai-kehadiran").value) || 0,
+        Keterangan: document.getElementById("nilai-keterangan").value.trim(),
+
+        // TPs
+        "Nilai TP1": parseFloat(document.getElementById("nilai-tp1").value) || "",
+        "TP2": parseFloat(document.getElementById("nilai-tp2").value) || "",
+        "TP3": parseFloat(document.getElementById("nilai-tp3").value) || "",
+        "TP4": parseFloat(document.getElementById("nilai-tp4").value) || "",
+        "TP5": parseFloat(document.getElementById("nilai-tp5").value) || "",
+
+        // LMs
+        "Nilai LM1": parseFloat(document.getElementById("nilai-lm1").value) || "",
+        "LM2": parseFloat(document.getElementById("nilai-lm2").value) || "",
+        "LM3": parseFloat(document.getElementById("nilai-lm3").value) || "",
+        "LM4": parseFloat(document.getElementById("nilai-lm4").value) || "",
+        "LM5": parseFloat(document.getElementById("nilai-lm5").value) || ""
+      };
+
+      try {
+        const res = await apiRequest(mode, { sheetName: subject, data });
+        if (res?.success) {
+          closeModal("nilai-modal");
+          showToast("Data nilai berhasil disimpan!", "success");
+          loadSubjectData();
+        } else {
+          showToast(res.error || "Gagal menyimpan data nilai.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function editNilai(nilai) {
+      openNilaiModal(nilai);
+    }
+
+    async function deleteNilai(nisn) {
+      const subject = document.getElementById("subject-selector").value;
+      if (confirm(`Apakah Anda yakin ingin menghapus data nilai siswa dengan NISN ${nisn} untuk subjek ${subject.replace("Daftar Nilai ", "")}?`)) {
+        try {
+          const res = await apiRequest('delete', { sheetName: subject, nisn });
+          if (res?.success) {
+            showToast("Nilai berhasil dihapus!", "success");
+            loadSubjectData();
+          } else {
+            showToast(res.error, "error");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // ==========================================
+    // 3. CATATAN WALI KELAS CRUD LOGIC
+    // ==========================================
+    async function loadCatatanData() {
+      try {
+        const res = await apiRequest('read', { sheetName: 'Catatan Wali Kelas' });
+        if (res?.success) {
+          catatanList = res.data;
+          renderCatatanTable(catatanList);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderCatatanTable(data) {
+      const tbody = document.getElementById("catatan-table-body");
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="table-empty-state text-muted">
+              Belum ada catatan wali kelas yang didokumentasikan.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = data.map((item, idx) => `
+        <tr>
+          <td>${item.No || (idx + 1)}</td>
+          <td><span class="badge badge-indigo">${item.NISN}</span></td>
+          <td class="font-semibold">${item.Nama}</td>
+          <td>${item.Kelas}</td>
+          <td class="color-gray-200">${item.Catatan}</td>
+          <td>
+            <div class="action-icons text-center" style="justify-content: center;">
+              <button type="button" class="action-btn edit-btn" onclick='editCatatan(${JSON.stringify(item).replace(/'/g, "&apos;")})' title="Edit Catatan">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              <button type="button" class="action-btn delete-btn" onclick="deleteCatatan('${item.NISN}')" title="Hapus Catatan">
+                <svg class="nav-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterCatatanTable() {
+      const q = document.getElementById("catatan-search").value.toLowerCase();
+      const filtered = catatanList.filter(c =>
+        c.Nama.toLowerCase().includes(q) ||
+        String(c.NISN).includes(q) ||
+        c.Catatan.toLowerCase().includes(q)
+      );
+      renderCatatanTable(filtered);
+    }
+
+    async function openCatatanModal(cat = null) {
+      document.getElementById("catatan-form").reset();
+
+      const selectStudent = document.getElementById("catatan-student-select");
+      selectStudent.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+      selectStudent.removeAttribute("disabled");
+
+      try {
+        if (siswaList.length === 0) {
+          const res = await apiRequest('read', { sheetName: 'Daftar Siswa' });
+          if (res?.success) siswaList = res.data;
+        }
+        siswaList.forEach(s => {
+          selectStudent.innerHTML += `<option value="${s.NISN}">${s.Nama} (${s.Kelas})</option>`;
+        });
+      } catch (err) {
+        console.error("Gagal memuat dropdown siswa", err);
+      }
+
+      const mode = document.getElementById("catatan-form-mode");
+      const title = document.getElementById("catatan-modal-title");
+
+      if (cat) {
+        mode.value = "update";
+        title.innerText = "Edit Catatan Wali Kelas";
+        selectStudent.value = cat.NISN;
+        selectStudent.setAttribute("disabled", "true");
+
+        document.getElementById("catatan-nisn").value = cat.NISN;
+        document.getElementById("catatan-nama").value = cat.Nama;
+        document.getElementById("catatan-kelas").value = cat.Kelas;
+        document.getElementById("catatan-ortu").value = cat.NoOrangTua || "";
+        document.getElementById("catatan-text").value = cat.Catatan;
+      } else {
+        mode.value = "create";
+        title.innerText = "Tulis Catatan Wali Kelas Baru";
+      }
+
+      openModal("catatan-modal");
+    }
+
+    function onCatatanStudentSelectChange() {
+      const select = document.getElementById("catatan-student-select");
+      const nisn = select.value;
+
+      if (nisn) {
+        const student = siswaList.find(s => String(s.NISN) === String(nisn));
+        if (student) {
+          document.getElementById("catatan-nisn").value = student.NISN;
+          document.getElementById("catatan-nama").value = student.Nama;
+          document.getElementById("catatan-kelas").value = student.Kelas;
+          document.getElementById("catatan-ortu").value = student.NoOrangTua;
+        }
+      }
+    }
+
+    async function submitCatatanForm(e) {
+      e.preventDefault();
+      const mode = document.getElementById("catatan-form-mode").value;
+      const data = {
+        NISN: document.getElementById("catatan-nisn").value,
+        Nama: document.getElementById("catatan-nama").value,
+        Kelas: document.getElementById("catatan-kelas").value,
+        NoOrangTua: document.getElementById("catatan-ortu").value,
+        Catatan: document.getElementById("catatan-text").value.trim()
+      };
+
+      try {
+        const res = await apiRequest(mode, { sheetName: 'Catatan Wali Kelas', data });
+        if (res?.success) {
+          closeModal("catatan-modal");
+          showToast("Catatan wali kelas berhasil disimpan!", "success");
+          loadCatatanData();
+        } else {
+          showToast(res.error || "Gagal menyimpan catatan.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function editCatatan(cat) {
+      openCatatanModal(cat);
+    }
+
+    async function deleteCatatan(nisn) {
+      if (confirm(`Apakah Anda yakin ingin menghapus catatan untuk siswa NISN ${nisn}?`)) {
+        try {
+          const res = await apiRequest('delete', { sheetName: 'Catatan Wali Kelas', nisn });
+          if (res?.success) {
+            showToast("Catatan berhasil dihapus!", "success");
+            loadCatatanData();
+          } else {
+            showToast(res.error, "error");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // ==========================================
+    // 4. WHATSAPP & BIMBINGAN SYSTEM
+    // ==========================================
+    async function loadWhatsAppSetup() {
+      const select = document.getElementById("wa-student-select");
+      select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+
+      document.getElementById("wa-student-profile").style.display = "none";
+      document.getElementById("wa-message-preview").innerText = "Pilih siswa terlebih dahulu untuk melihat preview draf surat...";
+      document.getElementById("wa-custom-notes").value = "";
+      document.getElementById("btn-send-wa").setAttribute("disabled", "true");
+
+      try {
+        if (siswaList.length === 0) {
+          const res = await apiRequest('read', { sheetName: 'Daftar Siswa' });
+          if (res?.success) siswaList = res.data;
+        }
+
+        siswaList.forEach(s => {
+          select.innerHTML += `<option value="${s.NISN}">${s.Nama} (${s.Kelas})</option>`;
+        });
+      } catch (err) {
+        console.error("Gagal memuat dropdown siswa WA", err);
+      }
+    }
+
+    async function onWhatsAppStudentChange() {
+      const nisn = document.getElementById("wa-student-select").value;
+      if (!nisn) {
+        loadWhatsAppSetup();
+        return;
+      }
+
+      try {
+        const res = await apiRequest('getStudentSummary', { nisn });
+        if (res?.success) {
+          selectedStudentSummary = res.data;
+
+          // Show student details
+          document.getElementById("wa-student-profile").style.display = "block";
+          document.getElementById("lbl-wa-nisn").innerText = selectedStudentSummary.siswa.NISN;
+          document.getElementById("lbl-wa-nama").innerText = selectedStudentSummary.siswa.Nama;
+          document.getElementById("lbl-wa-ortu").innerText = selectedStudentSummary.siswa.NoOrangTua;
+          document.getElementById("lbl-wa-hadir").innerText = selectedStudentSummary.ringkasan.rataRataKehadiran;
+          document.getElementById("lbl-wa-sikap").innerText = selectedStudentSummary.ringkasan.rataRataSikap;
+
+          document.getElementById("lbl-wa-chat-title").innerText = `Wali Murid - ${selectedStudentSummary.siswa.Nama}`;
+
+          // Prefill custom notes from wali kelas notes if available
+          if (selectedStudentSummary.catatanWaliKelas && selectedStudentSummary.catatanWaliKelas !== "-") {
+            document.getElementById("wa-custom-notes").value = selectedStudentSummary.catatanWaliKelas;
+          } else {
+            document.getElementById("wa-custom-notes").value = "";
+          }
+
+          // Generate draft
+          regenerateWhatsAppMessage();
+          document.getElementById("btn-send-wa").removeAttribute("disabled");
+        } else {
+          showToast(res.error, "error");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function regenerateWhatsAppMessage() {
+      if (!selectedStudentSummary) return;
+
+      const s = selectedStudentSummary.siswa;
+      const n = selectedStudentSummary.nilai;
+      const r = selectedStudentSummary.ringkasan;
+      const customNotes = document.getElementById("wa-custom-notes").value.trim();
+
+      const subMat = n["Matematika"] ? n["Matematika"].rataRata : "Belum diisi";
+      const subInd = n["B.Indonesia"] ? n["B.Indonesia"].rataRata : "Belum diisi";
+      const subIpas = n["IPAS"] ? n["IPAS"].rataRata : "Belum diisi";
+      const subPan = n["Pendidikan Pancasila"] ? n["Pendidikan Pancasila"].rataRata : "Belum diisi";
+      const subSen = n["Seni"] ? n["Seni"].rataRata : "Belum diisi";
+      const subSun = n["B Sunda"] ? n["B Sunda"].rataRata : "Belum diisi";
+      const subKok = n["Kokurikuler"] ? n["Kokurikuler"].rataRata : "Belum diisi";
+
+      let msg = `*LAPORAN PERKEMBANGAN HASIL BELAJAR SISWA*
+*SD ANTIGRAVITY MAJU BERSAMA*
+
+Yth. Orang Tua/Wali dari:
+*Nama:* ${s.Nama}
+*NISN:* ${s.NISN}
+*Kelas:* ${s.Kelas}
+
+Berikut adalah ringkasan capaian belajar Ananda saat ini:
+------------------------------------------
+• *Rata-rata Akademik:* ${r.rataRataKognitif} / 100
+• *Rata-rata Nilai Sikap:* ${r.rataRataSikap} / 100
+• *Rata-rata Kehadiran:* ${r.rataRataKehadiran}%
+------------------------------------------
+
+*Rincian Nilai Rata-rata per Mata Pelajaran:*
+1. Matematika: *${subMat}*
+2. Bahasa Indonesia: *${subInd}*
+3. IPAS: *${subIpas}*
+4. Pendidikan Pancasila: *${subPan}*
+5. Seni: *${subSen}*
+6. Bahasa Sunda: *${subSun}*
+7. Kokurikuler: *${subKok}*
+
+*Catatan Wali Kelas / Perkembangan Siswa:*
+_${customNotes || 'Ananda berpartisipasi dengan baik dalam proses pembelajaran, harap pertahankan dan terus kembangkan prestasinya.'}_
+
+Mari kita terus bekerja sama membimbing Ananda demi kesuksesan belajarnya di sekolah maupun di rumah. Terima kasih atas dukungan Bapak/Ibu Wali Siswa.
+
+*Hormat Kami,*
+_Wali Kelas ${s.Kelas}_`;
+
+      document.getElementById("wa-message-preview").innerText = msg;
+    }
+
+    function formatWhatsAppNumber(phone) {
+      let cleaned = phone.replace(/\D/g, '');
+      if (cleaned.startsWith('0')) {
+        cleaned = '62' + cleaned.slice(1);
+      }
+      return cleaned;
+    }
+
+    function sendWhatsAppMessage() {
+      if (!selectedStudentSummary) return;
+      const phone = selectedStudentSummary.siswa.NoOrangTua;
+      const message = document.getElementById("wa-message-preview").innerText;
+
+      if (!phone) {
+        showToast("Nomor WhatsApp orang tua tidak ditemukan!", "error");
+        return;
+      }
+
+      const formattedPhone = formatWhatsAppNumber(phone);
+      const url = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      showToast("Membuka WhatsApp...", "success");
+    }
+
+    // ==========================================
+    // UTILITY INTERFACE FUNCTIONS
+    // ==========================================
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-box");
+      const toast = document.createElement("div");
+      toast.className = `toast toast-${type}`;
+
+      let icon = "⚙";
+      if (type === 'success') icon = "✓";
+      else if (type === 'error') icon = "✗";
+      else if (type === 'warning') icon = "⚠";
+
+      toast.innerHTML = `
+        <div class="font-semibold" style="font-size: 1.1rem;">${icon}</div>
+        <div>${message}</div>
+      `;
+
+      container.appendChild(toast);
+
+      // trigger slide-in
+      setTimeout(() => toast.classList.add("show"), 10);
+
+      // Auto remove
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function showLoader(isActive) {
+      const loader = document.getElementById("global-loader");
+      if (isActive) loader.classList.add("active");
+      else loader.classList.remove("active");
+    }
+  </script>
+</body>
+
+</html>
